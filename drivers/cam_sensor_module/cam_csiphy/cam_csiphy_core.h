@@ -71,10 +71,10 @@ int cam_csiphy_util_update_aon_ops(bool get_access, uint32_t phy_idx);
 /**
  * @csiphy_dev : CSIPhy device structure
  *
- * This API updates the auxiliary settings mask for the current data rate
+ * This API sets the aux settings required property in the global variable.
  *
  */
-void cam_csiphy_update_auxiliary_mask(struct csiphy_device *csiphy_dev);
+void cam_csiphy_apply_aux_settings(struct csiphy_device *csiphy_dev);
 
 /**
  * @csiphy_dev: CSIPhy device structure

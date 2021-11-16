@@ -47,33 +47,33 @@ struct g_csiphy_data {
 	uint32_t cpas_handle;
 	uint64_t data_rate_aux_mask;
 	bool is_configured_for_main;
+	uint32_t need_aux_settings;
 	bool enable_aon_support;
+	bool is_aux_sett_reqrd;
 	struct cam_csiphy_aon_sel_params_t *aon_sel_param;
 };
 
 static struct g_csiphy_data g_phy_data[MAX_CSIPHY] = {{0, 0}};
 static int active_csiphy_hw_cnt;
 
-void cam_csiphy_update_auxiliary_mask(struct csiphy_device *csiphy_dev)
+void cam_csiphy_apply_aux_settings(struct csiphy_device *csiphy_dev)
 {
 	if (!csiphy_dev) {
-		CAM_ERR(CAM_CSIPHY, "Invalid param");
+		CAM_ERR(CAM_CSIPHY, "Invalid param.");
 		return;
 	}
 
-	if (!g_phy_data[csiphy_dev->soc_info.index].is_3phase) {
-		CAM_INFO_RATE_LIMIT(CAM_CSIPHY, "2PH Sensor is connected to the PHY");
-		return;
+	if (g_phy_data[csiphy_dev->soc_info.index].is_3phase) {
+		g_phy_data[csiphy_dev->soc_info.index].is_aux_sett_reqrd = true;
+		g_phy_data[csiphy_dev->soc_info.index].need_aux_settings |=
+			(1 << csiphy_dev->curr_data_rate_idx);
 	}
-
-	g_phy_data[csiphy_dev->soc_info.index].data_rate_aux_mask |=
-			BIT_ULL(csiphy_dev->curr_data_rate_idx);
 
 	CAM_DBG(CAM_CSIPHY,
-		"CSIPHY[%u] configuring aux settings curr_data_rate_idx: %u curr_data_rate: %llu curr_aux_mask: 0x%lx",
-		csiphy_dev->soc_info.index, csiphy_dev->curr_data_rate_idx,
-		csiphy_dev->current_data_rate,
-		g_phy_data[csiphy_dev->soc_info.index].data_rate_aux_mask);
+		"Aux Settings Required: %s for [data_rate_idx: %u rate: %llu aux_mask: %u]",
+		CAM_BOOL_TO_YESNO(g_phy_data[csiphy_dev->soc_info.index].is_aux_sett_reqrd),
+		csiphy_dev->curr_data_rate_idx, csiphy_dev->current_data_rate,
+		g_phy_data[csiphy_dev->soc_info.index].need_aux_settings);
 }
 
 int32_t cam_csiphy_get_instance_offset(
@@ -1024,27 +1024,31 @@ static int cam_csiphy_cphy_data_rate_config(
 				if (skew_cal_enable)
 					cam_io_w_mb(reg_data, csiphybase + reg_addr);
 				break;
-				case CSIPHY_AUXILIARY_SETTING: {
+				case CSIPHY_AUXILLARY_SETTING: {
 					uint32_t phy_idx = csiphy_device->soc_info.index;
 
-					if (g_phy_data[phy_idx].data_rate_aux_mask &
-						BIT_ULL(data_rate_idx)) {
+					/*
+					 * Configure aux settings if this data rate failed previously failed
+					 */
+					if ((g_phy_data[phy_idx].is_aux_sett_reqrd) &&
+						(g_phy_data[phy_idx].need_aux_settings &
+						(1 << data_rate_idx)))
 						cam_io_w_mb(reg_data, csiphybase + reg_addr);
-						CAM_DBG(CAM_CSIPHY,
-							"Writing new aux setting  reg_addr: 0x%x reg_val: 0x%x",
-							reg_addr, reg_data);
-					}
 				}
 				break;
 				default:
 					CAM_DBG(CAM_CSIPHY, "Do Nothing");
 				break;
 				}
+
 				if (delay > 0)
 					usleep_range(delay, delay + 5);
 			}
 		}
+<<<<<<< HEAD
 
+=======
+>>>>>>> c1e691cce... msm: camera: csiphy: Add support for Auxiliary Settings
 		csiphy_device->curr_data_rate_idx = data_rate_idx;
 		break;
 	}
@@ -2505,7 +2509,8 @@ int cam_csiphy_register_baseaddress(struct csiphy_device *csiphy_dev)
 		csiphy_dev->ctrl_reg->csiphy_reg.aon_sel_params;
 	g_phy_data[phy_idx].enable_aon_support = false;
 	g_phy_data[phy_idx].is_configured_for_main = false;
-	g_phy_data[phy_idx].data_rate_aux_mask = 0;
+	g_phy_data[phy_idx].is_aux_sett_reqrd = false;
+	g_phy_data[phy_idx].need_aux_settings = 0x0;
 
 	return 0;
 }
