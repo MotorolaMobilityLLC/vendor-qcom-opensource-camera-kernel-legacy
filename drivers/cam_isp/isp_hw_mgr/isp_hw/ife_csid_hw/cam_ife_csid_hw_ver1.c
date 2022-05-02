@@ -4106,9 +4106,10 @@ static int cam_ife_csid_ver1_rx_bottom_half_handler(
 		cam_subdev_notify_message(CAM_CSIPHY_DEVICE_TYPE,
 				CAM_SUBDEV_MESSAGE_IRQ_ERR,
 				&subdev_msg);
+				
 		cam_ife_csid_ver1_handle_event_err(csid_hw, evt_payload, event_type);
 		csid_hw->flags.reset_awaited = true;
-
+	}
 	return IRQ_HANDLED;
 }
 

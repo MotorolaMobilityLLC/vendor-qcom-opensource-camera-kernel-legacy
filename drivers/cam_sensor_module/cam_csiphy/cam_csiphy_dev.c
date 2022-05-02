@@ -52,7 +52,6 @@ static void cam_csiphy_subdev_handle_message(
 			}
 		}
 		break;
-	}
 	default:
 		break;
 	}

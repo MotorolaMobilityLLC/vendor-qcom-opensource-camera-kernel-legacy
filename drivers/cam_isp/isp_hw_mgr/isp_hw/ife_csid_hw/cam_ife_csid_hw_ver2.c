@@ -1486,7 +1486,6 @@ void cam_ife_csid_ver2_print_format_measure_info(
 	struct cam_subdev_msg_payload subdev_msg = {0};
 	bool csiphy_aux_setting = true;
 
-	data_idx = csid_hw->rx_cfg.phy_sel - 1;
 	actual_frame = cam_io_r_mb(base + path_reg->format_measure0_addr);
 	expected_frame = cam_io_r_mb(base + path_reg->format_measure_cfg1_addr);
 
