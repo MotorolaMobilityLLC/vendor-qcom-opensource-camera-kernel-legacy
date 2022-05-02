@@ -1045,10 +1045,6 @@ static int cam_csiphy_cphy_data_rate_config(
 					usleep_range(delay, delay + 5);
 			}
 		}
-<<<<<<< HEAD
-
-=======
->>>>>>> c1e691cce... msm: camera: csiphy: Add support for Auxiliary Settings
 		csiphy_device->curr_data_rate_idx = data_rate_idx;
 		break;
 	}
