@@ -1,5 +1,5 @@
 ifeq ($(BOARD_USES_LEGACY_CAMERA), true)
-ifneq ($(TARGET_USES_QMAA),true)
-PRODUCT_PACKAGES += camera.ko
-endif
+
+include $(call my-dir)/$(TARGET_PRODUCT)/Android.mk
+
 endif # BOARD_USES_LEGACY_CAMERA
