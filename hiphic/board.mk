@@ -1,3 +1,5 @@
+ifeq ($(BOARD_USES_LEGACY_CAMERA), true)
+ifneq (,$(findstring hiphic, $(strip $(TARGET_PRODUCT))))
 # Build camera kernel driver
 ifneq ($(TARGET_USES_QMAA),true)
 ifneq ($(TARGET_BOARD_AUTO),true)
@@ -6,3 +8,5 @@ BOARD_VENDOR_KERNEL_MODULES += $(KERNEL_MODULES_OUT)/camera.ko
 endif
 endif
 endif
+endif # TARGET_PRODUCT
+endif # BOARD_USES_LEGACY_CAMERA
