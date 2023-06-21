@@ -1,5 +1,7 @@
-ifneq ($(BOARD_USES_LEGACY_CAMERA), true)
+ifeq ($(BOARD_USES_LEGACY_CAMERA), true)
+ifneq (,$(findstring bronco, $(strip $(TARGET_PRODUCT))))
 ifneq ($(TARGET_USES_QMAA),true)
 PRODUCT_PACKAGES += camera.ko
 endif
-endif # !BOARD_USES_LEGACY_CAMERA
+endif # TARGET_PRODUCT
+endif # BOARD_USES_LEGACY_CAMERA
