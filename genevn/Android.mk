@@ -1,10 +1,11 @@
-ifneq ($(BOARD_USES_LEGACY_CAMERA), true)
+ifeq ($(BOARD_USES_LEGACY_CAMERA), true)
 ifeq ($(call is-board-platform-in-list, $(TARGET_BOARD_PLATFORM)),true)
 
 # Make target to specify building the camera.ko from within Android build system.
 LOCAL_PATH := $(call my-dir)
 # Path to DLKM make scripts
 DLKM_DIR := $(TOP)/device/qcom/common/dlkm
+
 
 # Kbuild options
 KBUILD_OPTIONS := CAMERA_KERNEL_ROOT=$(shell pwd)/$(LOCAL_PATH)
