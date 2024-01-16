@@ -870,7 +870,10 @@ static int cam_tfe_bus_start_wm(struct cam_isp_resource_node *wm_res)
 	struct cam_tfe_bus_common_data        *common_data =
 		rsrc_data->common_data;
 
-	cam_io_w(0xf, common_data->mem_base + rsrc_data->hw_regs->bw_limit);
+	if (rsrc_data->index == 7 || rsrc_data->index == 8)
+		cam_io_w(0xB, common_data->mem_base + rsrc_data->hw_regs->bw_limit);
+	else
+		cam_io_w(0xf, common_data->mem_base + rsrc_data->hw_regs->bw_limit);
 
 	cam_io_w((rsrc_data->height << 16) | rsrc_data->width,
 		common_data->mem_base + rsrc_data->hw_regs->image_cfg_0);
