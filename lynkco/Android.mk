@@ -1,4 +1,4 @@
-ifneq ($(BOARD_USES_LEGACY_CAMERA), true)
+ifeq ($(BOARD_USES_LEGACY_CAMERA), true)
 ifeq ($(call is-board-platform-in-list, $(TARGET_BOARD_PLATFORM)),true)
 
 # Make target to specify building the camera.ko from within Android build system.

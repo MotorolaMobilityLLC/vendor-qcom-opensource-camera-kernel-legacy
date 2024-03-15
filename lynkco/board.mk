@@ -1,4 +1,4 @@
-ifneq ($(BOARD_USES_LEGACY_CAMERA), true)
+ifeq ($(BOARD_USES_LEGACY_CAMERA), true)
 # Build camera kernel driver
 ifneq ($(TARGET_USES_QMAA),true)
 ifneq ($(TARGET_BOARD_AUTO),true)
